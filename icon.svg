@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- radio body -->
+  <rect x="14" y="38" width="100" height="70" rx="12" fill="#1d2129" stroke="#39415a" stroke-width="3"/>
+  <!-- antenna -->
+  <line x1="98" y1="40" x2="118" y2="10" stroke="#e5484d" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="118" cy="10" r="5" fill="#e5484d"/>
+  <!-- speaker grill -->
+  <g fill="#39415a">
+    <circle cx="82" cy="58" r="3.5"/><circle cx="96" cy="58" r="3.5"/>
+    <circle cx="82" cy="72" r="3.5"/><circle cx="96" cy="72" r="3.5"/>
+    <circle cx="82" cy="86" r="3.5"/><circle cx="96" cy="86" r="3.5"/>
+  </g>
+  <!-- tuning dial -->
+  <rect x="26" y="52" width="44" height="40" rx="6" fill="#14171c" stroke="#4cc38a" stroke-width="2"/>
+  <line x1="34" y1="86" x2="34" y2="94" stroke="#8b93a1" stroke-width="2"/>
+  <line x1="48" y1="86" x2="48" y2="94" stroke="#8b93a1" stroke-width="2"/>
+  <line x1="62" y1="86" x2="62" y2="94" stroke="#8b93a1" stroke-width="2"/>
+  <!-- tuner needle -->
+  <line x1="52" y1="54" x2="52" y2="90" stroke="#e5484d" stroke-width="3"/>
+  <!-- knobs -->
+  <circle cx="34" cy="98" r="6" fill="#8b93a1"/>
+  <circle cx="94" cy="98" r="6" fill="#8b93a1"/>
+</svg>

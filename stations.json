@@ -1,0 +1,698 @@
+{
+  "version": 2,
+  "countries": [
+    {
+      "id": "CA",
+      "flag": "🇨🇦",
+      "name": "Canada — Toronto/GTA",
+      "stations": [
+        {
+          "freq": "88.1",
+          "name": "Indie88",
+          "band": "FM",
+          "genre": "Alternative",
+          "url": "https://localradio.streamb.live/SB00348"
+        },
+        {
+          "freq": "88.9",
+          "name": "CIRV FM",
+          "band": "FM",
+          "genre": "Multicultural",
+          "url": "http://ice5.securenetsystems.net/CIRV"
+        },
+        {
+          "freq": "89.5",
+          "name": "CIUT",
+          "band": "FM",
+          "genre": "Community/UofT",
+          "url": "https://ice23.securenetsystems.net/CIUT"
+        },
+        {
+          "freq": "91.1",
+          "name": "JAZZ.FM91",
+          "band": "FM",
+          "genre": "Jazz",
+          "url": "https://jazzfm91.streamb.live/SB00009"
+        },
+        {
+          "freq": "92.5",
+          "name": "KiSS 92.5",
+          "band": "FM",
+          "genre": "Top 40",
+          "url": "https://rogers-hls.leanstream.co/rogers/tor925.stream/playlist.m3u8"
+        },
+        {
+          "freq": "93.5",
+          "name": "93.5 The Move",
+          "band": "FM",
+          "genre": "Hip-Hop/R&B",
+          "url": "http://newcap.leanstream.co/CFXJFM"
+        },
+        {
+          "freq": "94.1",
+          "name": "CBC Music",
+          "band": "FM",
+          "genre": "Eclectic",
+          "url": "https://cbcradiolive.akamaized.net/hls/live/2041043/ES_R2M/master.m3u8"
+        },
+        {
+          "freq": "95.9",
+          "name": "KX96 New Country",
+          "band": "FM",
+          "genre": "Country (Ajax)",
+          "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CJKXFM.mp3"
+        },
+        {
+          "freq": "97.3",
+          "name": "Boom 97.3",
+          "band": "FM",
+          "genre": "Classic Hits",
+          "url": "http://newcap.leanstream.co/CHBMFM"
+        },
+        {
+          "freq": "98.1",
+          "name": "CHFI",
+          "band": "FM",
+          "genre": "Adult Contemp",
+          "url": "https://rogers-hls.leanstream.co/rogers/tor981.stream/playlist.m3u8"
+        },
+        {
+          "freq": "98.7",
+          "name": "G98.7 Flow",
+          "band": "FM",
+          "genre": "Urban AC",
+          "url": "https://ice64.securenetsystems.net:80/CKFG"
+        },
+        {
+          "freq": "99.1",
+          "name": "CBC Radio One",
+          "band": "FM",
+          "genre": "News/Talk",
+          "url": "https://cbcradiolive.akamaized.net/hls/live/2041057/ES_R1P/master.m3u8"
+        },
+        {
+          "freq": "99.9",
+          "name": "Virgin Radio",
+          "band": "FM",
+          "genre": "Top 40",
+          "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CKFMFM.mp3"
+        },
+        {
+          "freq": "100.7",
+          "name": "CHIN FM",
+          "band": "FM",
+          "genre": "Multicultural",
+          "url": "http://ice7.securenetsystems.net/CHINFM"
+        },
+        {
+          "freq": "102.1",
+          "name": "102.1 The Edge",
+          "band": "FM",
+          "genre": "Rock",
+          "url": "http://live.leanstream.co/CFNYFM-MP3"
+        },
+        {
+          "freq": "103.5",
+          "name": "Z103.5",
+          "band": "FM",
+          "genre": "Dance/Euro",
+          "url": "https://evanov.streamb.live/SB00222/playlist.m3u8"
+        },
+        {
+          "freq": "104.5",
+          "name": "104.5 CHUM FM",
+          "band": "FM",
+          "genre": "Hot AC",
+          "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CHUMFM.mp3"
+        },
+        {
+          "freq": "105.5",
+          "name": "Vibe 105.5",
+          "band": "FM",
+          "genre": "Community",
+          "url": "http://ice7.securenetsystems.net/CHRY"
+        },
+        {
+          "freq": "107.1",
+          "name": "Q107",
+          "band": "FM",
+          "genre": "Classic Rock",
+          "url": "http://live.leanstream.co/CILQFM"
+        },
+        {
+          "freq": "590",
+          "name": "Sportsnet 590 The FAN",
+          "band": "AM",
+          "genre": "Sports (AM)",
+          "url": "https://rogers-hls.leanstream.co/rogers/tor590.stream/playlist.m3u8"
+        },
+        {
+          "freq": "680",
+          "name": "CityNews 680",
+          "band": "AM",
+          "genre": "All-News (AM)",
+          "url": "https://rogers-hls.leanstream.co/rogers/tor680.stream/playlist.m3u8"
+        },
+        {
+          "freq": "1010",
+          "name": "News Talk 1010 CFRB",
+          "band": "AM",
+          "genre": "News/Talk (AM)",
+          "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CFRBAM.mp3"
+        },
+        {
+          "freq": "1050",
+          "name": "TSN 1050",
+          "band": "AM",
+          "genre": "Sports (AM)",
+          "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CHUMAM.mp3"
+        },
+        {
+          "freq": "1280",
+          "name": "CJRU The Scope",
+          "band": "AM",
+          "genre": "Community (AM)",
+          "url": "http://ryerson.out.airtime.pro:8000/ryerson_a"
+        },
+        {
+          "freq": "1320",
+          "name": "CJMR Mississauga",
+          "band": "AM",
+          "genre": "Multiling (AM)",
+          "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CJMRAM.mp3"
+        },
+        {
+          "freq": "1540",
+          "name": "CHIN AM",
+          "band": "AM",
+          "genre": "Multicult (AM)",
+          "url": "http://ice7.securenetsystems.net/CHINAM"
+        },
+        {
+          "freq": "1610",
+          "name": "CHHA Voces Latinas",
+          "band": "AM",
+          "genre": "Spanish (AM)",
+          "url": "http://72.139.27.130:100/broadwave.mp3?src=1&rate=1"
+        }
+      ]
+    },
+    {
+      "id": "IN",
+      "flag": "🇮🇳",
+      "name": "India",
+      "stations": [
+        {
+          "freq": "",
+          "name": "Vividh Bharati — National",
+          "band": "FM",
+          "genre": "Hindi Retro",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio001/playlist.m3u8"
+        },
+        {
+          "freq": "102.8",
+          "name": "Vividh Bharati Hyderabad",
+          "band": "FM",
+          "genre": "Hindi/Telugu",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio034/playlist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Vividh Bharati Mumbai",
+          "band": "FM",
+          "genre": "Hindi Retro",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio011/hlspbaudio011_Auto.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Vividh Bharati Chennai",
+          "band": "FM",
+          "genre": "Hindi/Tamil",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio024/playlist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Vividh Bharati Bengaluru",
+          "band": "FM",
+          "genre": "Hindi/Kannada",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio026/hlspbaudio026_Auto.m3u8"
+        },
+        {
+          "freq": "100.1",
+          "name": "AIR FM Gold Delhi",
+          "band": "FM",
+          "genre": "Hindi Oldies",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio005/hlspbaudio005_Auto.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR FM Gold Mumbai",
+          "band": "FM",
+          "genre": "Hindi Oldies",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio007/hlspbaudio007_Auto.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR FM Gold Kolkata",
+          "band": "FM",
+          "genre": "Hindi/Bengali Oldies",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio057/hlspbaudio05764kbps.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR FM Gold Chennai",
+          "band": "FM",
+          "genre": "Hindi/Tamil",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio021/chunklist.m3u8"
+        },
+        {
+          "freq": "102.6",
+          "name": "AIR FM Rainbow Delhi",
+          "band": "FM",
+          "genre": "Hindi/English",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio004/hlspbaudio004_Auto.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR FM Rainbow Mumbai",
+          "band": "FM",
+          "genre": "Hindi/English",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio008/hlspbaudio008_Auto.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR FM Rainbow Kolkata",
+          "band": "FM",
+          "genre": "Hindi/Bengali",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio058/hlspbaudio05864kbps.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR FM Rainbow Hyderabad",
+          "band": "FM",
+          "genre": "Telugu/Hindi",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio031/chunklist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR FM Rainbow Bengaluru",
+          "band": "FM",
+          "genre": "Kannada/Hindi",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio027/hlspbaudio027_Auto.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR FM Rainbow Chennai",
+          "band": "FM",
+          "genre": "Tamil",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio022/playlist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR Chennai Tamil Service",
+          "band": "FM",
+          "genre": "Tamil",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio025/playlist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR Malayalam Service",
+          "band": "FM",
+          "genre": "Malayalam",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio230/playlist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR Punjabi Jalandhar",
+          "band": "FM",
+          "genre": "Punjabi",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio138/chunklist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR Urdu Service",
+          "band": "FM",
+          "genre": "Urdu",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio006/hlspbaudio00632kbps.m3u8"
+        },
+        {
+          "freq": "103.4",
+          "name": "Akashvani Dharamshala",
+          "band": "FM",
+          "genre": "Hindi Regional",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio165/playlist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Akashvani Asmita Vahini",
+          "band": "FM",
+          "genre": "Kannada",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio010/hlspbaudio010_Auto.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Akashvani Karnataka",
+          "band": "FM",
+          "genre": "Kannada",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio030/hlspbaudio030_Auto.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR Geetanjali Kolkata",
+          "band": "FM",
+          "genre": "Bengali/Hindi",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio055/hlspbaudio05564kbps.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "AIR News 24x7",
+          "band": "AM",
+          "genre": "National News",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio002/hlspbaudio002_Auto.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Akashvani Maitree Kolkata",
+          "band": "AM",
+          "genre": "Bengali",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudio245/hlspbaudio24564kbps.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Akashvani Raagam",
+          "band": "AM",
+          "genre": "Indian Classical",
+          "url": "https://airhlspush.pc.cdn.bitgravity.com/httppush/hlspbaudioragam/hlspbaudioragam_Auto.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Hello FM Chennai",
+          "band": "FM",
+          "genre": "Tamil",
+          "url": "http://radios.crabdance.com:8002/3"
+        },
+        {
+          "freq": "",
+          "name": "Suryan FM Chennai",
+          "band": "FM",
+          "genre": "Tamil",
+          "url": "http://radios.crabdance.com:8002/1"
+        },
+        {
+          "freq": "",
+          "name": "Radio City Chennai",
+          "band": "FM",
+          "genre": "Tamil/Hindi",
+          "url": "http://radios.crabdance.com:8002/5"
+        },
+        {
+          "freq": "",
+          "name": "Radio Mirchi Hindi",
+          "band": "WEB",
+          "genre": "Bollywood Hits",
+          "url": "https://eu8.fastcast4u.com/proxy/clyedupq/stream"
+        },
+        {
+          "freq": "",
+          "name": "Mirchi Top 20",
+          "band": "WEB",
+          "genre": "Bollywood Charts",
+          "url": "https://drive.uber.radio/uber/bollywoodnow/icecast.audio"
+        },
+        {
+          "freq": "",
+          "name": "Mirchi Love",
+          "band": "WEB",
+          "genre": "Bollywood Romance",
+          "url": "https://drive.uber.radio/uber/bollywoodlove/icecast.audio"
+        },
+        {
+          "freq": "",
+          "name": "Mirchi Love Hindi",
+          "band": "WEB",
+          "genre": "Bollywood Romance",
+          "url": "https://drive.uber.radio/uber/lrbollywood/icecast.audio"
+        },
+        {
+          "freq": "",
+          "name": "Radio Hungama Dil Se",
+          "band": "WEB",
+          "genre": "Bollywood",
+          "url": "https://stream.zeno.fm/143d7gty24zuv"
+        },
+        {
+          "freq": "",
+          "name": "Bollywood Gaane Purane",
+          "band": "WEB",
+          "genre": "Hindi Retro",
+          "url": "https://stream.zeno.fm/6n6ewddtad0uv"
+        },
+        {
+          "freq": "",
+          "name": "New Hits of Bollywood",
+          "band": "WEB",
+          "genre": "Bollywood Hits",
+          "url": "https://stream-146.zeno.fm/rqqps6cbe3quv"
+        },
+        {
+          "freq": "",
+          "name": "Bollywood 2010s",
+          "band": "WEB",
+          "genre": "Bollywood 2010s",
+          "url": "https://drive.uber.radio/uber/bollywood2010s/icecast.audio"
+        },
+        {
+          "freq": "",
+          "name": "Radio Bollywood 90s",
+          "band": "WEB",
+          "genre": "Bollywood 90s",
+          "url": "https://stream.zeno.fm/rm4i9pdex3cuv"
+        },
+        {
+          "freq": "",
+          "name": "Retro Bollywood 90s",
+          "band": "WEB",
+          "genre": "Bollywood 90s",
+          "url": "https://stream-143.zeno.fm/fdgs82xkzhhvv"
+        },
+        {
+          "freq": "",
+          "name": "Bollywood Dance",
+          "band": "WEB",
+          "genre": "Bollywood Dance",
+          "url": "http://drive.uber.radio/uber/bollywooddance/icecast.audio"
+        },
+        {
+          "freq": "",
+          "name": "My Club Remix",
+          "band": "WEB",
+          "genre": "Bollywood Remix",
+          "url": "http://stream.zeno.fm/u7eee0hyzp8uv"
+        },
+        {
+          "freq": "",
+          "name": "Hindi Retro",
+          "band": "WEB",
+          "genre": "Hindi Retro",
+          "url": "https://stream.zeno.fm/v2zfmxef798uv"
+        },
+        {
+          "freq": "",
+          "name": "Hindi Gold Radio",
+          "band": "WEB",
+          "genre": "Hindi Classics",
+          "url": "https://azuracast.vibesounds.in:8010/radio.mp3"
+        },
+        {
+          "freq": "",
+          "name": "Radio BollyFM",
+          "band": "WEB",
+          "genre": "Bollywood",
+          "url": "http://stream.radiobollyfm.in:8201/hd"
+        },
+        {
+          "freq": "",
+          "name": "FnF.FM Hindi",
+          "band": "WEB",
+          "genre": "Hindi Hits",
+          "url": "http://192.99.8.192:5032/;stream"
+        },
+        {
+          "freq": "",
+          "name": "My Radio DJ",
+          "band": "WEB",
+          "genre": "Bollywood Mix",
+          "url": "http://stream.zeno.fm/84h97t3ewg0uv"
+        },
+        {
+          "freq": "",
+          "name": "Goldy Evergreen",
+          "band": "WEB",
+          "genre": "Hindi Retro",
+          "url": "https://stream.zeno.fm/n2fd0edh9k8uv"
+        },
+        {
+          "freq": "",
+          "name": "Goldy Cool",
+          "band": "WEB",
+          "genre": "Hindi Mix",
+          "url": "https://stream.zeno.fm/3k1fb86tfm8uv"
+        },
+        {
+          "freq": "",
+          "name": "Hits of Lata Mangeshkar",
+          "band": "WEB",
+          "genre": "Lata Mangeshkar",
+          "url": "https://stream.zeno.fm/g95zm67prfhvv"
+        },
+        {
+          "freq": "",
+          "name": "Radio Lata Mangeshkar",
+          "band": "WEB",
+          "genre": "Lata Mangeshkar",
+          "url": "https://stream.zeno.fm/87xam8pf7tzuv"
+        },
+        {
+          "freq": "",
+          "name": "Hits of Kishore Kumar",
+          "band": "WEB",
+          "genre": "Kishore Kumar",
+          "url": "https://stream.zeno.fm/pg6rqp8ztm0uv"
+        },
+        {
+          "freq": "",
+          "name": "Hits of Mohammed Rafi",
+          "band": "WEB",
+          "genre": "Mohammed Rafi",
+          "url": "https://stream.zeno.fm/0zkr7x8ztm0uv"
+        },
+        {
+          "freq": "",
+          "name": "Radio Shreya Ghoshal",
+          "band": "WEB",
+          "genre": "Shreya Ghoshal",
+          "url": "https://drive.uber.radio/uber/bollywoodshreyaghosal/icecast.audio"
+        },
+        {
+          "freq": "",
+          "name": "Goldy Mukesh",
+          "band": "WEB",
+          "genre": "Mukesh",
+          "url": "https://stream.zeno.fm/t39watus1p8uv"
+        },
+        {
+          "freq": "",
+          "name": "My 90s Bengali",
+          "band": "WEB",
+          "genre": "Bengali Retro",
+          "url": "http://stream.zeno.fm/2k6xfu1pvs8uv"
+        },
+        {
+          "freq": "",
+          "name": "Bhojpuri Songs",
+          "band": "WEB",
+          "genre": "Bhojpuri",
+          "url": "https://stream.zeno.fm/yz0ncx9gha0uv"
+        },
+        {
+          "freq": "",
+          "name": "Kalai FM Tamil",
+          "band": "WEB",
+          "genre": "Tamil",
+          "url": "https://stream.zenolive.com/2vghnwshsqzuv.aac"
+        },
+        {
+          "freq": "",
+          "name": "Radio Maria India",
+          "band": "WEB",
+          "genre": "Christian",
+          "url": "http://dreamsiteradiocp.com:8002/stream"
+        },
+        {
+          "freq": "",
+          "name": "2B! Radio Sangam Shri Ram",
+          "band": "WEB",
+          "genre": "Devotional",
+          "url": "http://dard.out.airtime.pro:8000/dard_a"
+        },
+        {
+          "freq": "",
+          "name": "2B! Radio Sangam Krishna",
+          "band": "WEB",
+          "genre": "Devotional",
+          "url": "http://millenniumhits.out.airtime.pro:8000/millenniumhits_a"
+        },
+        {
+          "freq": "",
+          "name": "2B! Radio Sangam Ganesha",
+          "band": "WEB",
+          "genre": "Devotional",
+          "url": "http://radio2bindia.out.airtime.pro:8000/radio2bindia_a"
+        },
+        {
+          "freq": "",
+          "name": "2B! Radio Sangam Shiva",
+          "band": "WEB",
+          "genre": "Devotional",
+          "url": "http://hot.out.airtime.pro:8000/hot_a"
+        },
+        {
+          "freq": "",
+          "name": "Akashvani Gujarati (National)",
+          "band": "FM",
+          "genre": "Gujarati",
+          "url": "https://radio.wavespb.com/live/8a1bb2ca9d2a6741/8a1bb2ca9d2a6741.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Vividh Bharati Ahmedabad",
+          "band": "FM",
+          "genre": "Gujarati/Hindi",
+          "url": "https://radio.wavespb.com/live/983903b6acb669f3/983903b6acb669f3.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Akashvani Rajkot",
+          "band": "FM",
+          "genre": "Gujarati",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio155/playlist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Vividh Bharati Rajkot",
+          "band": "FM",
+          "genre": "Gujarati/Hindi",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio156/playlist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Akashvani Surat",
+          "band": "FM",
+          "genre": "Gujarati",
+          "url": "https://radio.wavespb.com/live/fc6ce69c53a3d739/fc6ce69c53a3d739.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Akashvani Vadodara",
+          "band": "FM",
+          "genre": "Gujarati",
+          "url": "https://radio.wavespb.com/live/e1c63b2c2b58921f/e1c63b2c2b58921f.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Akashvani Bhuj (Kutch)",
+          "band": "FM",
+          "genre": "Gujarati",
+          "url": "https://air.pc.cdn.bitgravity.com/air/live/pbaudio195/playlist.m3u8"
+        },
+        {
+          "freq": "",
+          "name": "Akashvani Godhra",
+          "band": "FM",
+          "genre": "Gujarati",
+          "url": "https://radio.wavespb.com/live/3fa69e2c950b70e8/3fa69e2c950b70e8.m3u8"
+        }
+      ]
+    }
+  ]
+}
