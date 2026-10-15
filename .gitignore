@@ -1,0 +1,8 @@
+# build artifacts
+dist/
+*.dist/
+*.build/
+*.onefile-build/
+icon.ico
+__pycache__/
+nuitka-crash-report.xml

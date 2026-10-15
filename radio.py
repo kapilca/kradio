@@ -24,7 +24,7 @@ def load_data():
         data = json.load(f)
     if "countries" in data:
         return data["countries"]
-    return [{"id": "CA", "flag": "\U0001f1e8\U0001f1e6", "name": "Canada \u2014 Toronto/GTA",
+    return [{"id": "CA", "flag": "[CA]", "name": "Canada \u2014 Toronto/GTA",
              "stations": data["stations"]}]
 
 
@@ -103,10 +103,10 @@ class Player:
         return self.proc is not None and self.proc.poll() is None
 
 
-def draw(stdscr, stations, sel, playing_idx, player, status, offset):
+def draw(stdscr, stations, sel, playing_idx, player, status, offset, country):
     stdscr.erase()
     h, w = stdscr.getmaxyx()
-    header = f" \U0001f4fb {countries[ci]['flag']} {countries[ci]['name']} "
+    header = f" \U0001f4fb {country['flag']} {country['name']} "
     stdscr.addstr(0, 2, header, curses.A_REVERSE | curses.A_BOLD)
     vol = "MUTED" if player.muted else f"{player.volume}%"
     stdscr.addstr(0, max(0, w - 14), f" VOL {vol:>5} ", curses.A_REVERSE)
@@ -152,7 +152,8 @@ def main(stdscr):
     status = "Enter to play · q quits"
 
     while True:
-        draw(stdscr, stations, selectable[sel], playing_idx, player, status, offset)
+        draw(stdscr, stations, selectable[sel], playing_idx, player, status,
+             offset, countries[ci])
         key = stdscr.getch()
 
         if key in (ord("q"), ord("Q")):

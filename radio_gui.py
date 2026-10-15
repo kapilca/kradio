@@ -21,8 +21,32 @@ except ImportError:
         "then try again."
     )
 
-HERE = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
+# When frozen: look for stations.json / ffplay.exe next to the .exe (so
+# users can edit them); fall back to the bundled copy (PyInstaller's
+# sys._MEIPASS, or Nuitka's data dir).
+if "__compiled__" in globals():                    # Nuitka (onefile or onedir)
+    HERE = os.path.dirname(os.path.abspath(sys.argv[0]))   # real exe folder
+    BUNDLED = os.path.dirname(os.path.abspath(__file__))   # bundled data
+elif getattr(sys, "frozen", False):                # PyInstaller
+    HERE = os.path.dirname(sys.executable)
+    BUNDLED = getattr(sys, "_MEIPASS", HERE)
+else:
+    HERE = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
+    BUNDLED = HERE
 STATIONS_FILE = os.path.join(HERE, "stations.json")
+if not os.path.isfile(STATIONS_FILE):
+    STATIONS_FILE = os.path.join(BUNDLED, "stations.json")
+
+
+def ffplay_cmd():
+    """ffplay next to the app (portable install) if present, else bundled
+    copy, else whatever is on PATH."""
+    exe = "ffplay.exe" if os.name == "nt" else "ffplay"
+    for base in (HERE, BUNDLED):
+        local = os.path.join(base, exe)
+        if os.path.isfile(local):
+            return local
+    return exe
 MIN_VOL, MAX_VOL, DEFAULT_VOL = 10, 100, 80
 POLL_MS = 1000  # how often we check the stream is still alive
 BAND_ORDER = ["FM", "AM", "WEB"]
@@ -44,7 +68,7 @@ def load_data():
     if "countries" in data:                    # v2 multi-country schema
         return data["countries"]
     # v1 single-country schema (Toronto only) — wrap it
-    return [{"id": "CA", "flag": "🇨🇦", "name": "Canada — Toronto/GTA",
+    return [{"id": "CA", "flag": "[CA]", "name": "Canada — Toronto/GTA",
              "stations": data["stations"]}]
 
 
@@ -72,7 +96,8 @@ def grouped_rows(country):
 
 def _pdeathsig():
     """Child helper: ask Linux to kill this process if the parent dies.
-    Prevents orphaned ffplay audio streams if the app is killed."""
+    Prevents orphaned ffplay audio streams if the app is killed.
+    (POSIX only — never called on Windows.)"""
     libc = ctypes.CDLL("libc.so.6", use_errno=True)
     PR_SET_PDEATHSIG = 1
     libc.prctl(PR_SET_PDEATHSIG, signal.SIGTERM)
@@ -106,13 +131,25 @@ class Player:
             return
         self._kill()
         env = dict(os.environ, SDL_VIDEODRIVER="dummy")
+        # platform tweaks: Linux wants PDEATHSIG, Windows wants no console
+        # window (preexec_fn is not supported there at all)
+        extra = {}
+        if os.name == "nt":
+            extra["creationflags"] = subprocess.CREATE_NO_WINDOW
+        else:
+            extra["preexec_fn"] = _pdeathsig
         try:
             self.proc = subprocess.Popen(
-                ["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet",
+                [ffplay_cmd(), "-nodisp", "-autoexit", "-loglevel", "quiet",
                  "-volume", str(vol), "-i", url],
                 stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL, env=env, preexec_fn=_pdeathsig)
+                stderr=subprocess.DEVNULL, env=env, **extra)
         except FileNotFoundError:
+            if os.name == "nt":
+                raise RuntimeError(
+                    "ffplay not found. Install FFmpeg (e.g. "
+                    "winget install Gyan.FFmpeg) and make sure ffplay.exe "
+                    "is on PATH.") from None
             self.proc = subprocess.Popen(
                 "ffmpeg -v quiet -i '%s' -af volume=%d -f s16le -ar 48000 -ac 2 "
                 "| aplay -q -f S16_LE -r 48000 -c 2" % (url, vol),
@@ -142,6 +179,241 @@ class Player:
         return self.proc is not None and self.proc.poll() is None
 
 
+# --------------------------------------------------------------------------
+# System tray (Windows notification area) — pure ctypes, no extra packages.
+# Closing the window hides it to the tray and playback keeps going; the tray
+# icon's menu is how you reopen or really quit. On non-Windows (or if the
+# tray icon can't be created) closing the window exits as before.
+# --------------------------------------------------------------------------
+try:
+    import threading
+    import ctypes.wintypes as _wt
+
+    _user32 = ctypes.WinDLL("user32", use_last_error=True)
+    _shell32 = ctypes.WinDLL("shell32", use_last_error=True)
+    _HAS_TRAY = os.name == "nt"
+except Exception:                                   # non-Windows / broken ctypes
+    _HAS_TRAY = False
+
+if _HAS_TRAY:
+    WM_NULL, WM_DESTROY, WM_CLOSE = 0x0000, 0x0002, 0x0010
+    WM_LBUTTONUP, WM_LBUTTONDBLCLK, WM_RBUTTONUP = 0x0202, 0x0203, 0x0205
+    NIM_ADD, NIM_MODIFY, NIM_DELETE = 0, 1, 2
+    NIF_MESSAGE, NIF_ICON, NIF_TIP, NIF_INFO = 0x1, 0x2, 0x4, 0x10
+    MF_GRAYED, MF_SEPARATOR, TPM_FLAGS = 0x1, 0x800, 0x0182  # RIGHTBUTTON|NONOTIFY|RETURNCMD
+
+    _LRESULT = ctypes.c_ssize_t
+    _WPARAM = ctypes.c_size_t
+    _LPARAM = ctypes.c_ssize_t
+    _WNDPROC = ctypes.WINFUNCTYPE(_LRESULT, ctypes.c_void_p, ctypes.c_uint,
+                                  _WPARAM, _LPARAM)
+
+    class _WNDCLASSW(ctypes.Structure):
+        _fields_ = [("style", ctypes.c_uint), ("lpfnWndProc", _WNDPROC),
+                    ("cbClsExtra", ctypes.c_int), ("cbWndExtra", ctypes.c_int),
+                    ("hInstance", ctypes.c_void_p), ("hIcon", ctypes.c_void_p),
+                    ("hCursor", ctypes.c_void_p), ("hBackground", ctypes.c_void_p),
+                    ("lpszMenuName", ctypes.c_wchar_p),
+                    ("lpszClassName", ctypes.c_wchar_p)]
+
+    class _NOTIFYICONDATAW(ctypes.Structure):
+        _fields_ = [("cbSize", ctypes.c_uint), ("hWnd", ctypes.c_void_p),
+                    ("uID", ctypes.c_uint), ("uFlags", ctypes.c_uint),
+                    ("uCallbackMessage", ctypes.c_uint),
+                    ("hIcon", ctypes.c_void_p),
+                    ("szTip", ctypes.c_wchar * 128),
+                    ("dwState", ctypes.c_uint), ("dwStateMask", ctypes.c_uint),
+                    ("szInfo", ctypes.c_wchar * 256),
+                    ("uVersion", ctypes.c_uint),
+                    ("szInfoTitle", ctypes.c_wchar * 64),
+                    ("dwInfoFlags", ctypes.c_uint),
+                    ("guidItem", ctypes.c_byte * 16),
+                    ("hBalloonIcon", ctypes.c_void_p)]
+
+    _user32.CreateWindowExW.restype = ctypes.c_void_p
+    _user32.CreateWindowExW.argtypes = [ctypes.c_uint, ctypes.c_wchar_p,
+                                        ctypes.c_wchar_p, ctypes.c_uint,
+                                        ctypes.c_int, ctypes.c_int,
+                                        ctypes.c_int, ctypes.c_int,
+                                        ctypes.c_void_p, ctypes.c_void_p,
+                                        ctypes.c_void_p, ctypes.c_void_p]
+    _user32.DefWindowProcW.restype = _LRESULT
+    _user32.DefWindowProcW.argtypes = [ctypes.c_void_p, ctypes.c_uint,
+                                       _WPARAM, _LPARAM]
+    _user32.GetMessageW.restype = ctypes.c_int
+    _user32.GetMessageW.argtypes = [ctypes.POINTER(_wt.MSG), ctypes.c_void_p,
+                                    ctypes.c_uint, ctypes.c_uint]
+    _user32.DispatchMessageW.restype = _LRESULT
+    _user32.DispatchMessageW.argtypes = [ctypes.POINTER(_wt.MSG)]
+    _user32.PostMessageW.argtypes = [ctypes.c_void_p, ctypes.c_uint,
+                                     _WPARAM, _LPARAM]
+    _user32.SetForegroundWindow.argtypes = [ctypes.c_void_p]
+    _user32.LoadImageW.restype = ctypes.c_void_p
+    _user32.LoadImageW.argtypes = [ctypes.c_void_p, ctypes.c_wchar_p,
+                                   ctypes.c_uint, ctypes.c_int, ctypes.c_int,
+                                   ctypes.c_uint]
+    _user32.LoadIconW.restype = ctypes.c_void_p
+    _user32.LoadIconW.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+    _user32.AppendMenuW.argtypes = [ctypes.c_void_p, ctypes.c_uint,
+                                    ctypes.c_size_t, ctypes.c_wchar_p]
+    _user32.TrackPopupMenu.restype = ctypes.c_int
+    _user32.TrackPopupMenu.argtypes = [ctypes.c_void_p, ctypes.c_uint,
+                                       ctypes.c_int, ctypes.c_int, ctypes.c_int,
+                                       ctypes.c_void_p, ctypes.c_void_p]
+    _shell32.Shell_NotifyIconW.restype = ctypes.c_int
+    _shell32.Shell_NotifyIconW.argtypes = [ctypes.c_uint, ctypes.c_void_p]
+
+    class TrayIcon:
+        """Tray icon on its own thread with its own message window.
+
+        Callbacks (on_open/on_stop/on_exit) run on the tray thread; the app
+        marshals them onto the Tk thread with .after().
+        """
+
+        _WM_TRAY = 0x8001                      # WM_APP + 1
+
+        def __init__(self, icon_file, tooltip, on_open, on_stop, on_exit,
+                     is_playing):
+            self._cb_open, self._cb_stop = on_open, on_stop
+            self._cb_exit, self._is_playing = on_exit, is_playing
+            self._tip = tooltip[:127]
+            self._hwnd = None
+            self._ok = False                    # icon successfully added
+            self._dead = False                  # shutdown requested
+            self._ready = threading.Event()
+
+            self._hicon = None
+            if icon_file and os.path.isfile(icon_file):
+                sx = _user32.GetSystemMetrics(49) or 16   # SM_CXSMICON
+                sy = _user32.GetSystemMetrics(50) or 16   # SM_CYSMICON
+                self._hicon = _user32.LoadImageW(
+                    None, icon_file, 1, sx, sy, 0x10)      # IMAGE_ICON|FROMFILE
+            if not self._hicon:
+                self._hicon = _user32.LoadIconW(None, 32512)  # IDI_APPLICATION
+
+            self._wndproc_ref = _WNDPROC(self._wndproc)   # keep alive (GC!)
+            self._thread = threading.Thread(target=self._run, daemon=True,
+                                             name="kradio-tray")
+            self._thread.start()
+            self._ready.wait(5)                 # icon added / failed by now
+
+        @property
+        def alive(self):
+            return self._ok and not self._dead
+
+        # -- called from the tray thread ------------------------------------
+        def _run(self):
+            hinst = ctypes.WinDLL("kernel32", use_last_error=True) \
+                .GetModuleHandleW(None)
+            cls = "kradioTray%d" % os.getpid()
+            wc = _WNDCLASSW()
+            wc.lpfnWndProc = self._wndproc_ref
+            wc.hInstance = hinst
+            wc.lpszClassName = cls
+            if not _user32.RegisterClassW(ctypes.byref(wc)):
+                self._ready.set()
+                return
+            self._hwnd = _user32.CreateWindowExW(
+                0, cls, "kradio tray window", 0, 0, 0, 0, 0,
+                ctypes.c_void_p(-3), None, hinst, None)   # HWND_MESSAGE parent
+            self._ok = bool(_shell32.Shell_NotifyIconW(
+                NIM_ADD, ctypes.byref(self._nid())))
+            self._ready.set()
+            if not self._ok:
+                _user32.DestroyWindow(self._hwnd)
+                return
+            msg = _wt.MSG()
+            while _user32.GetMessageW(ctypes.byref(msg), None, 0, 0) > 0:
+                _user32.TranslateMessage(ctypes.byref(msg))
+                _user32.DispatchMessageW(ctypes.byref(msg))
+
+        def _wndproc(self, hwnd, msg, wparam, lparam):
+            try:
+                if msg == self._WM_TRAY:
+                    m = lparam & 0xFFFF
+                    if m in (WM_LBUTTONUP, WM_LBUTTONDBLCLK):
+                        self._safe(self._cb_open)
+                    elif m in (WM_RBUTTONUP, 0x007B):     # R up / CONTEXTMENU
+                        self._menu()
+                    return 0
+                if msg == WM_CLOSE:
+                    _user32.DestroyWindow(hwnd)
+                    return 0
+                if msg == WM_DESTROY:
+                    _shell32.Shell_NotifyIconW(NIM_DELETE,
+                                               ctypes.byref(self._nid()))
+                    _user32.PostQuitMessage(0)
+                    self._ok = False
+                    return 0
+            except Exception:
+                pass
+            return _user32.DefWindowProcW(hwnd, msg, wparam, lparam)
+
+        def _menu(self):
+            hmenu = _user32.CreatePopupMenu()
+            _user32.AppendMenuW(hmenu, 0, 1, "Open kradio")
+            _user32.AppendMenuW(hmenu, 0 if self._is_playing() else MF_GRAYED,
+                                2, "Stop playback")
+            _user32.AppendMenuW(hmenu, MF_SEPARATOR, 0, None)
+            _user32.AppendMenuW(hmenu, 0, 3, "Exit")
+            pt = _wt.POINT()
+            _user32.GetCursorPos(ctypes.byref(pt))
+            _user32.SetForegroundWindow(self._hwnd)   # so the menu dismisses
+            cmd = _user32.TrackPopupMenu(hmenu, TPM_FLAGS, pt.x, pt.y, 0,
+                                         self._hwnd, None)
+            _user32.PostMessageW(self._hwnd, WM_NULL, 0, 0)
+            _user32.DestroyMenu(hmenu)
+            if cmd == 1:
+                self._safe(self._cb_open)
+            elif cmd == 2:
+                self._safe(self._cb_stop)
+            elif cmd == 3:
+                self._safe(self._cb_exit)
+
+        def _safe(self, cb):
+            try:
+                cb()
+            except Exception:
+                pass
+
+        # -- called from the Tk thread --------------------------------------
+        def _nid(self):
+            n = _NOTIFYICONDATAW()
+            n.cbSize = ctypes.sizeof(n)
+            n.hWnd = self._hwnd
+            n.uID = 1
+            n.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP
+            n.uCallbackMessage = self._WM_TRAY
+            n.hIcon = self._hicon
+            n.szTip = self._tip
+            return n
+
+        def set_tooltip(self, text):
+            if not self.alive:
+                return
+            self._tip = text[:127]
+            _shell32.Shell_NotifyIconW(NIM_MODIFY,
+                                       ctypes.byref(self._nid()))
+
+        def show_balloon(self, title, text):
+            if not self.alive:
+                return
+            n = self._nid()
+            n.uFlags = NIF_INFO
+            n.szInfoTitle = title[:63]
+            n.szInfo = text[:255]
+            n.dwInfoFlags = 1                          # NIIF_INFO
+            _shell32.Shell_NotifyIconW(NIM_MODIFY, ctypes.byref(n))
+
+        def shutdown(self):
+            self._dead = True
+            if self._hwnd:
+                _user32.PostMessageW(self._hwnd, WM_CLOSE, 0, 0)
+            t = self._thread
+            if t.is_alive() and t is not threading.current_thread():
+                t.join(1.0)
+
+
 class RadioApp(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -152,8 +424,19 @@ class RadioApp(tk.Tk):
         self.player = Player()
         self.current = None          # dict of the playing station
         self._vol_job = None         # debounce id for volume slider
+        self.tray = None             # system-tray icon (close-to-tray)
+        self._tray_hinted = False    # shown the "still running" balloon?
 
-        self.countries = load_data()
+        try:
+            self.countries = load_data()
+        except (OSError, ValueError) as e:
+            import traceback
+            self.countries = []
+            self.after(200, lambda: (messagebox.showerror(
+                "Radio — startup error",
+                "Could not load stations.json:\n%s\n\nMake sure stations.json "
+                "sits next to the app." % e), self._on_close()))
+            return
         self.country_labels = [f"{c['flag']}  {c['name']}" for c in self.countries]
         self.country = self.countries[0]
 
@@ -161,8 +444,25 @@ class RadioApp(tk.Tk):
         self._build_ui()
         self._bind_keys()
         self.protocol("WM_DELETE_WINDOW", self._on_close)
-        signal.signal(signal.SIGTERM, lambda *_: self._on_close())
+        signal.signal(signal.SIGTERM, lambda *_: self._quit_app())
         self.after(POLL_MS, self._poll)
+
+        # tray icon: X hides the window but the radio keeps playing
+        if _HAS_TRAY:
+            icon_file = next((os.path.join(b, "icon.ico")
+                              for b in (HERE, BUNDLED)
+                              if os.path.isfile(os.path.join(b, "icon.ico"))),
+                             None)
+            try:
+                self.tray = TrayIcon(
+                    icon_file,
+                    "kradio — idle",
+                    on_open=lambda: self.after(0, self._restore_from_tray),
+                    on_stop=lambda: self.after(0, self._stop),
+                    on_exit=lambda: self.after(0, self._quit_app),
+                    is_playing=lambda: self.player.current_url is not None)
+            except Exception:
+                self.tray = None   # tray unavailable: closing = exiting
 
     # ---------- UI construction ----------
     def _build_style(self):
@@ -342,7 +642,13 @@ class RadioApp(tk.Tk):
         if not s:
             return
         self.current = s
-        self.player.play(s)
+        try:
+            self.player.play(s)
+        except Exception as e:
+            self.current = None
+            messagebox.showerror("Playback error", str(e))
+            self.status_var.set(f"✗ {e}")
+            return
         self._update_np(f"Connecting to {s['name']}…")
 
     def _stop(self):
@@ -353,6 +659,7 @@ class RadioApp(tk.Tk):
         self.live_lbl.config(text="● OFF", fg=DIM)
         self.play_btn.config(text="▶  Play")
         self.status_var.set("Stopped")
+        self._update_tray()
 
     def _update_np(self, status):
         s = self.current
@@ -362,6 +669,7 @@ class RadioApp(tk.Tk):
             self.np_sub.config(text=f"{freq} {s.get('band','WEB')} · {s['genre']}")
             self.live_lbl.config(text="● LIVE", fg=ACCENT)
         self.status_var.set(status)
+        self._update_tray()
 
     def _poll(self):
         """Watchdog: notice when a stream dies or finishes connecting."""
@@ -377,6 +685,7 @@ class RadioApp(tk.Tk):
                 self._update_np(f"Stream ended: {self.current['name']}")
                 self.live_lbl.config(text="● OFF", fg=DIM)
             self.current = None
+            self._update_tray()
         self.after(POLL_MS, self._poll)
 
     # ---------- volume ----------
@@ -401,6 +710,8 @@ class RadioApp(tk.Tk):
         self.bind("<Escape>", lambda e: self._stop())
         self.bind("<n>", lambda e: self._next_country())
         self.bind("<N>", lambda e: self._prev_country())
+        self.bind("<Control-q>", lambda e: self._quit_app())
+        self.bind("<Control-Q>", lambda e: self._quit_app())
 
     def _next_country(self):
         i = self.countries.index(self.country)
@@ -412,8 +723,35 @@ class RadioApp(tk.Tk):
         self.country_var.set(self.country_labels[(i - 1) % len(self.countries)])
         self._switch_country()
 
+    # ---------- tray ----------
+    def _update_tray(self):
+        if self.tray and self.tray.alive:
+            name = self.current["name"] if self.current else "idle"
+            self.tray.set_tooltip(f"kradio — {name}")
+
+    def _restore_from_tray(self):
+        self.deiconify()
+        self.lift()
+        self.focus_force()
+
     def _on_close(self):
+        """X button: hide to the tray and keep playing (Exit quits for real)."""
+        if self.tray and self.tray.alive:
+            self.withdraw()
+            if not self._tray_hinted:
+                self._tray_hinted = True
+                self.tray.show_balloon(
+                    "kradio is still here",
+                    "The window closed to the tray but the radio keeps "
+                    "playing. Click the 📻 icon to reopen; right-click for "
+                    "options.")
+        else:
+            self._quit_app()
+
+    def _quit_app(self):
         self.player.stop()
+        if self.tray:
+            self.tray.shutdown()
         self.destroy()
 
 

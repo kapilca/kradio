@@ -3,7 +3,7 @@
   "countries": [
     {
       "id": "CA",
-      "flag": "🇨🇦",
+      "flag": "[CA]",
       "name": "Canada — Toronto/GTA",
       "stations": [
         {
@@ -199,7 +199,7 @@
     },
     {
       "id": "IN",
-      "flag": "🇮🇳",
+      "flag": "[IN]",
       "name": "India",
       "stations": [
         {
